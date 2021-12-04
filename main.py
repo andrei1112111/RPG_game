@@ -6,9 +6,9 @@ screen = pygame.display.set_mode((900, 900), 0, 32)
 display = pygame.Surface((300, 300))
 clock = pygame.time.Clock()
 
-map1 = [[1 for _ in range(15)] for _ in range(5)]
-map2 = [[0 for _ in range(15)] for _ in range(5)]
-# map_data = [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
+# map1 = [[1 for _ in range(15)] for _ in range(5)]
+# map2 = [[0 for _ in range(15)] for _ in range(5)]
+map1 = [[[1, 0, 1], [0, 1, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
 # map2 = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
 from texture import get_texture
@@ -24,15 +24,11 @@ while True:
     display.fill((0, 0, 0))
     x_pos, y_pos = player.get_pos()
     for y, row in enumerate(map1):
-        for x, tile in enumerate(row):
-            if tile:
-                display.blit(get_texture(tile), ((150 + x * 10 - y * 10) + x_pos,  # X
-                                                 (100 + x * 5 + y * 5) + y_pos))  # y
-            if map2[y][x]:
-                display.blit(get_texture(tile), ((150 + x * 10 - y * 10) + x_pos,  # X
-                                                 (100 + x * 5 + y * 5 - 14) + y_pos))  # Y
-
-
+        for x, height in enumerate(row):
+            for z, tile in enumerate(height):
+                if tile:
+                    display.blit(get_texture(tile), ((150 + x * 10 - y * 10) + x_pos,  # X
+                                                     (100 + x * 5 + y * 5 - ((z+1) * 14)) + y_pos))  # y
 
     player.get_move()
 

@@ -3,7 +3,7 @@ from map import map1
 
 pygame.init()
 pygame.display.set_caption('game base')
-screen = pygame.display.set_mode((900, 900), 0, 32)
+screen = pygame.display.set_mode((900, 900), pygame.SRCALPHA, 32)
 display = pygame.Surface((300, 300))
 clock = pygame.time.Clock()
 
@@ -26,6 +26,9 @@ while True:
                                                      (100 + x * 5 + y * 5 - ((z + 1) * 14)) + y_pos))  # y
 
     player.get_move()
+    player.event()
+    player.camera_center()
+    display.blit(player.img, player.get_player_pos())
 
     screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0))
     pygame.display.update()

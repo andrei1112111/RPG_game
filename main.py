@@ -28,7 +28,6 @@ while True:
     player.get_move()
     player.event()
     player.camera_center()
-    player.do_anim()
     display.blit(player.img, player.get_player_pos())
 
     screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0))

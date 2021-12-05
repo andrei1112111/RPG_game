@@ -7,7 +7,7 @@ class Player:
         self.x_pos = 0
         self.y_pos = 0
         self.z = 0
-        self.img = pygame.image.load('hero.png').convert()
+        self.img = pygame.image.load('data/hero.png').convert()
         self.img.set_colorkey((0, 0, 0))
         self.hero_pos = (3, 4)
         self.move = False

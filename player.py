@@ -18,7 +18,14 @@ class Player:
         self.anim = ('stand', None, None)
         self.anim_list = []
         self.event_anim = pygame.USEREVENT + 1
-        pygame.time.set_timer(self.event_anim, 2000)
+        self.eblock = False
+        pygame.time.set_timer(self.event_anim, 1500)
+
+    def check_interaction(self):
+        if not self.eblock:
+            if map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 2] == 10:
+                self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
+                self.eblock = True
 
     def camera_center(self):
         if self.hero_pos != self.hero_pos0:
@@ -49,8 +56,12 @@ class Player:
                         self.anim = [self.anim[0], self.anim[1], 3]
                     elif self.anim[2] == 3:
                         map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = 9
-                        self.anim = ('stand', None, None)
-                        print('СОБЫТИЕ')
+                        self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
+            case 'ch_block':
+                for dot in self.anim[1]:
+                    map1[dot[0]][dot[1]][dot[2]] = self.anim[2]
+                self.eblock = False
+                self.anim = ('stand', None, None)
 
     def get_bottom(self):
         return map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1]
@@ -99,6 +110,8 @@ class Player:
             self.x_pos += 1
         elif keys[pygame.K_d]:
             self.x_pos -= 1
+        elif keys[pygame.K_e]:
+            self.check_interaction()
 
     def get_pos(self):
         return self.x_pos, self.y_pos

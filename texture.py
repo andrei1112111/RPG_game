@@ -18,6 +18,8 @@ button2 = pygame.image.load('data/button2.png').convert()
 button2.set_colorkey((0, 0, 0))
 button3 = pygame.image.load('data/button3.png').convert()
 button3.set_colorkey((0, 0, 0))
+pipi = pygame.image.load('data/0.png').convert()
+pipi.set_colorkey((0, 0, 0))
 
 
 def get_texture(n):
@@ -40,3 +42,5 @@ def get_texture(n):
             return button3
         case 9:
             return button
+        case 10:
+            return pipi

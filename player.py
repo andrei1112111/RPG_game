@@ -7,9 +7,10 @@ class Player:
         self.x_pos = 0
         self.y_pos = 0
         self.z = 0
-        self.img = pygame.image.load('hero.png').convert()
+        self.img = pygame.image.load('data/hero.png').convert()
         self.img.set_colorkey((0, 0, 0))
         self.hero_pos = (3, 4)
+        self.hero_pos0 = self.hero_pos
         self.move = False
         self.move_to_cords = self.hero_pos
         self.clock = 0
@@ -20,7 +21,20 @@ class Player:
         pygame.time.set_timer(self.event_anim, 2000)
 
     def camera_center(self):
-        pass
+        if self.hero_pos != self.hero_pos0:
+            k = -1
+            if self.hero_pos[1] != self.hero_pos0[1]:
+                if self.hero_pos[1] > self.hero_pos0[1]:
+                    k = 1
+                self.x_pos += -10 * -k
+                self.y_pos += 4 * -k
+            else:
+                if self.hero_pos[0] > self.hero_pos0[0]:
+                    k = 1
+                self.x_pos += -10 * k
+                self.y_pos += -4 * k
+
+            self.hero_pos0 = self.hero_pos
 
     def do_anim(self):
         print(self.anim[0])

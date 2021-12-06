@@ -1,46 +1,40 @@
 import pygame
 
-doski_img = pygame.image.load('data/doski.png').convert()
-doski_img.set_colorkey((0, 0, 0))
-doskicover_img = pygame.image.load('data/doski_kover.png').convert()
-doskicover_img.set_colorkey((0, 0, 0))
-doski_imgc = pygame.image.load('data/doski.png').convert()
-doski_imgc.set_colorkey((0, 0, 0))
-doski_imgc.set_alpha(100)
-doskicover_imgc = pygame.image.load('data/doski_kover.png').convert()
-doskicover_imgc.set_colorkey((0, 0, 0))
-doskicover_imgc.set_alpha(100)
-glass = pygame.image.load('data/glass.png').convert()
-glass.set_colorkey((0, 0, 0))
-button = pygame.image.load('data/button.png').convert()
-button.set_colorkey((0, 0, 0))
-button2 = pygame.image.load('data/button2.png').convert()
-button2.set_colorkey((0, 0, 0))
-button3 = pygame.image.load('data/button3.png').convert()
-button3.set_colorkey((0, 0, 0))
-pipi = pygame.image.load('data/0.png').convert()
-pipi.set_colorkey((0, 0, 0))
+grass = pygame.image.load('data/textures/grass.png').convert()
+grass.set_colorkey((0, 0, 0))
+stones = pygame.image.load('data/textures/stones.png').convert()
+stones.set_colorkey((0, 0, 0))
+flowers = pygame.image.load('data/textures/flowers.png').convert()
+flowers.set_colorkey((0, 0, 0))
+herb = pygame.image.load('data/textures/herb.png').convert()
+herb.set_colorkey((0, 0, 0))
+planks = pygame.image.load('data/textures/planks.png').convert()
+planks.set_colorkey((0, 0, 0))
+wood = pygame.image.load('data/textures/wood.png').convert()
+wood.set_colorkey((0, 0, 0))
+foliage = pygame.image.load('data/textures/foliage.png').convert()
+foliage.set_colorkey((0, 0, 0))
+foliage_with_cone = pygame.image.load('data/textures/foliage_with_cone.png').convert()
+foliage_with_cone.set_colorkey((0, 0, 0))
 
 
 def get_texture(n):
     match n:
         case 1:
-            return doski_img
+            return grass
         case 2:
-            return doskicover_img
+            return stones
         case 3:
-            return doski_imgc
+            return flowers
         case 4:
-            return doskicover_imgc
+            return herb
         case 5:
-            return glass
+            return planks
         case 6:
-            return button
+            return wood
         case 7:
-            return button2
+            return foliage
         case 8:
-            return button3
-        case 9:
-            return button
-        case 10:
-            return pipi
+            return foliage_with_cone
+
+

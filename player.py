@@ -1,5 +1,6 @@
 import pygame
 from map import map1
+from  runTo import pers_go_to
 
 
 class Player:
@@ -9,18 +10,39 @@ class Player:
         self.z = 0
         self.img = pygame.image.load('data/hero.png').convert()
         self.img.set_colorkey((0, 0, 0))
-        self.hero_pos = (3, 4)
-        self.move = False
+        self.hero_pos = (0, 0)
+        self.hero_pos0 = self.hero_pos
+        self.move = []
         self.move_to_cords = self.hero_pos
         self.clock = 0
         self.clock2 = 0
-        self.anim = ('stand', None, None)
+        self.anim = ('none', [], [])
         self.anim_list = []
         self.event_anim = pygame.USEREVENT + 1
-        pygame.time.set_timer(self.event_anim, 2000)
+        self.eblock = False
+        pygame.time.set_timer(self.event_anim, 1500)
+
+    def check_interaction(self):
+        if not self.eblock:
+            if map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 2] == 10:
+                self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
+                self.eblock = True
 
     def camera_center(self):
-        pass
+        if self.hero_pos != self.hero_pos0:
+            k = -1
+            if self.hero_pos[1] != self.hero_pos0[1]:
+                if self.hero_pos[1] > self.hero_pos0[1]:
+                    k = 1
+                self.x_pos += -10 * -k
+                self.y_pos += 4 * -k
+            else:
+                if self.hero_pos[0] > self.hero_pos0[0]:
+                    k = 1
+                self.x_pos += -10 * k
+                self.y_pos += -4 * k
+
+            self.hero_pos0 = self.hero_pos
 
     def do_anim(self):
         print(self.anim[0])
@@ -35,8 +57,15 @@ class Player:
                         self.anim = [self.anim[0], self.anim[1], 3]
                     elif self.anim[2] == 3:
                         map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = 9
-                        self.anim = ('stand', None, None)
-                        print('СОБЫТИЕ')
+                        self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
+                else:
+                    map1[self.anim[1][0]][self.anim[1][1]][self.anim[1][2]] = 6
+                    self.anim = ('none', [], [])
+            case 'ch_block':
+                for dot in self.anim[1]:
+                    map1[dot[0]][dot[1]][dot[2]] = self.anim[2]
+                self.eblock = False
+                self.anim = ('none', [], [])
 
     def get_bottom(self):
         return map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1]
@@ -51,16 +80,17 @@ class Player:
 
     def move_to(self):
         if self.clock == 15:
-            if self.hero_pos[0] > self.move_to_cords[0]:
-                self.hero_pos = (self.hero_pos[0] - 1, self.hero_pos[1])
-            elif self.hero_pos[0] < self.move_to_cords[0]:
-                self.hero_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
-            elif self.hero_pos[1] > self.move_to_cords[1]:
-                self.hero_pos = (self.hero_pos[0], self.hero_pos[1] - 1)
-            elif self.hero_pos[1] < self.move_to_cords[1]:
-                self.hero_pos = (self.hero_pos[0], self.hero_pos[1] + 1)
-            else:
-                self.move = False
+            if self.move:
+                to = self.move.pop(0)
+                match to:
+                    case 'down':
+                        self.hero_pos = (self.hero_pos[0], self.hero_pos[1] + 1)
+                    case 'up':
+                        self.hero_pos = (self.hero_pos[0], self.hero_pos[1] - 1)
+                    case 'left':
+                        self.hero_pos = (self.hero_pos[0] - 1, self.hero_pos[1])
+                    case 'right':
+                        self.hero_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
         self.clock += 1
         if self.clock == 16:
             self.clock = 0
@@ -72,7 +102,7 @@ class Player:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 cords = self.get_cords(event.pos)
                 if cords:
-                    self.move = True
+                    self.move = pers_go_to(self.hero_pos, cords)
                     self.move_to_cords = cords
             if event.type == self.event_anim:
                 self.do_anim()
@@ -85,6 +115,8 @@ class Player:
             self.x_pos += 1
         elif keys[pygame.K_d]:
             self.x_pos -= 1
+        elif keys[pygame.K_e]:
+            self.check_interaction()
 
     def get_pos(self):
         return self.x_pos, self.y_pos

@@ -1,6 +1,6 @@
 import pygame
 from map import map1
-from  runTo import pers_go_to
+from runTo import pers_go_to
 
 
 class Player:
@@ -8,7 +8,7 @@ class Player:
         self.x_pos = 0
         self.y_pos = 0
         self.z = 0
-        self.img = pygame.image.load('data/hero.png').convert()
+        self.img = pygame.image.load('data/characters/diluc/stands/0.png').convert()
         self.img.set_colorkey((0, 0, 0))
         self.hero_pos = (0, 0)
         self.hero_pos0 = self.hero_pos
@@ -45,7 +45,7 @@ class Player:
             self.hero_pos0 = self.hero_pos
 
     def do_anim(self):
-        print(self.anim[0])
+        # print(self.anim[0])
         match self.anim[0]:
             case 'button':
                 if [self.hero_pos[0], self.hero_pos[1], self.z + 1] == self.anim[1]:
@@ -79,6 +79,7 @@ class Player:
                     self.anim = 'button', [self.hero_pos[0], self.hero_pos[1], self.z + 1], 1
 
     def move_to(self):
+        # print(self.hero_pos)
         if self.clock == 15:
             if self.move:
                 to = self.move.pop(0)

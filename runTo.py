@@ -63,14 +63,15 @@ def pers_go_to(In, Out):
                 r.append(-1)
         path.append(r)
     if path[Out[0]][Out[1]]:
-        print("Неверная точка")
+        # print("Неверная точка")
         return
     for i in path:
-        print(i)
+        pass
+        # print(i)
     path[In[0]][In[1]] = 1
     if not found(path, Out):
-        print("Путь не найден")
+        # print("Путь не найден")
         return
     result = printPath(path, Out)
-    print(result)
+    # print(result)
     return result

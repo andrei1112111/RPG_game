@@ -9,12 +9,14 @@ clock = pygame.time.Clock()
 
 from texture import get_texture
 from player import Player
+from interface import MiniMap
 
 player = Player()
+minimap = MiniMap(player, pygame, display)
 
 while True:
     clock.tick(60)
-    pygame.display.set_caption(f'FPS: {clock.get_fps()}')
+    pygame.display.set_caption(f'FPS: {round(clock.get_fps())}')
 
     display.fill((0, 0, 0))
     x_pos, y_pos = player.get_pos()
@@ -29,6 +31,8 @@ while True:
     player.event()
     player.camera_center()
     display.blit(player.img, player.get_player_pos())
+
+    minimap.display_minimap()
 
     screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0))
     pygame.display.update()

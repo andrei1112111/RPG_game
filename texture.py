@@ -1,40 +1,69 @@
 import pygame
+from skimage import io
 
 grass = pygame.image.load('data/textures/grass.png').convert()
 grass.set_colorkey((0, 0, 0))
+grass = [grass, io.imread('data/textures/grass.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 stones = pygame.image.load('data/textures/stones.png').convert()
 stones.set_colorkey((0, 0, 0))
+stones = [stones, io.imread('data/textures/stones.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 flowers = pygame.image.load('data/textures/flowers.png').convert()
 flowers.set_colorkey((0, 0, 0))
+flowers = [flowers, io.imread('data/textures/flowers.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 herb = pygame.image.load('data/textures/herb.png').convert()
 herb.set_colorkey((0, 0, 0))
+herb = [herb, io.imread('data/textures/herb.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 planks = pygame.image.load('data/textures/planks.png').convert()
 planks.set_colorkey((0, 0, 0))
+planks = [planks, io.imread('data/textures/planks.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 wood = pygame.image.load('data/textures/wood.png').convert()
 wood.set_colorkey((0, 0, 0))
+wood = [wood, io.imread('data/textures/wood.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 foliage = pygame.image.load('data/textures/foliage.png').convert()
 foliage.set_colorkey((0, 0, 0))
+foliage = [foliage, io.imread('data/textures/foliage.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
 foliage_with_cone = pygame.image.load('data/textures/foliage_with_cone.png').convert()
 foliage_with_cone.set_colorkey((0, 0, 0))
+foliage_with_cone = [foliage_with_cone,
+                     io.imread('data/textures/foliage_with_cone.png')[:, :, :-1].mean(axis=0).mean(
+                         axis=0)]
 
 
 def get_texture(n):
     match n:
         case 1:
-            return grass
+            return grass[0]
         case 2:
-            return stones
+            return stones[0]
         case 3:
-            return flowers
+            return flowers[0]
         case 4:
-            return herb
+            return herb[0]
         case 5:
-            return planks
+            return planks[0]
         case 6:
-            return wood
+            return wood[0]
         case 7:
-            return foliage
+            return foliage[0]
         case 8:
-            return foliage_with_cone
+            return foliage_with_cone[0]
 
 
+def get_mini_texture(n):
+    match n:
+        case 1:
+            return grass[-1]
+        case 2:
+            return stones[-1]
+        case 3:
+            return flowers[-1]
+        case 4:
+            return herb[-1]
+        case 5:
+            return planks[-1]
+        case 6:
+            return wood[-1]
+        case 7:
+            return foliage[-1]
+        case 8:
+            return foliage_with_cone[-1]

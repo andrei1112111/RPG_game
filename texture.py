@@ -38,3 +38,6 @@ def get_texture(n):
             return foliage_with_cone
 
 
+plita = 99
+plita_sost = [99, 99, 99]
+button = 99

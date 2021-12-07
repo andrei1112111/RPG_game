@@ -1,6 +1,7 @@
 import pygame
 from map import map1
-from  runTo import pers_go_to
+from runTo import pers_go_to
+from texture import plita, button, plita_sost
 
 
 class Player:
@@ -8,8 +9,7 @@ class Player:
         self.x_pos = 0
         self.y_pos = 0
         self.z = 0
-        self.img = pygame.image.load('data/hero.png').convert()
-        self.img.set_colorkey((0, 0, 0))
+        self.img = None
         self.hero_pos = (0, 0)
         self.hero_pos0 = self.hero_pos
         self.move = []
@@ -24,7 +24,7 @@ class Player:
 
     def check_interaction(self):
         if not self.eblock:
-            if map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 2] == 10:
+            if map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 2] == button:
                 self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
                 self.eblock = True
 
@@ -50,16 +50,16 @@ class Player:
             case 'button':
                 if [self.hero_pos[0], self.hero_pos[1], self.z + 1] == self.anim[1]:
                     if self.anim[2] == 1:
-                        map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = 7
+                        map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = plita_sost[0]
                         self.anim = [self.anim[0], self.anim[1], 2]
                     elif self.anim[2] == 2:
-                        map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = 8
+                        map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = plita_sost[1]
                         self.anim = [self.anim[0], self.anim[1], 3]
                     elif self.anim[2] == 3:
-                        map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = 9
+                        map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1] = plita_sost[2]
                         self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
                 else:
-                    map1[self.anim[1][0]][self.anim[1][1]][self.anim[1][2]] = 6
+                    map1[self.anim[1][0]][self.anim[1][1]][self.anim[1][2]] = plita
                     self.anim = ('none', [], [])
             case 'ch_block':
                 for dot in self.anim[1]:
@@ -68,14 +68,14 @@ class Player:
                 self.anim = ('none', [], [])
 
     def get_bottom(self):
-        return map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1]
+        return map1[self.hero_pos[1]][self.hero_pos[0]][self.z + 1]
 
     def event(self):
         if self.move:
             self.move_to()
         else:
             match self.get_bottom():
-                case 6:
+                case plita:
                     self.anim = 'button', [self.hero_pos[0], self.hero_pos[1], self.z + 1], 1
 
     def move_to(self):
@@ -123,7 +123,7 @@ class Player:
 
     def get_player_pos(self):
         return ((150 + self.hero_pos[0] * 10 - self.hero_pos[1] * 10) + self.x_pos,
-                (100 + self.hero_pos[0] * 5 + self.hero_pos[1] * 5 - ((self.z + 2) * 14)) + self.y_pos)
+                (100 + self.hero_pos[0] * 5 + self.hero_pos[1] * 5 - ((self.z + 2) * 16)) + self.y_pos)
 
     def get_cords(self, pos):
         for y, row in enumerate(map1):

@@ -1,32 +1,47 @@
 import pygame
 from skimage import io
 
+
+def get_average_color(mapp):
+    r, g, b = 0, 0, 0
+    counter = 0
+    for line in mapp:
+        for elem in line:
+            if elem[0] != 0 and \
+                    elem[0] != 0 and \
+                    elem[0] != 0:
+                counter += 1
+                r += int(elem[0])
+                g += elem[1]
+                b += elem[2]
+    return [int(r / counter), int(g / counter), int(b / counter)]
+
+
 grass = pygame.image.load('data/textures/grass.png').convert()
 grass.set_colorkey((0, 0, 0))
-grass = [grass, io.imread('data/textures/grass.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+grass = [grass, get_average_color(io.imread('data/textures/grass.png')[:, :, :-1])]
 stones = pygame.image.load('data/textures/stones.png').convert()
 stones.set_colorkey((0, 0, 0))
-stones = [stones, io.imread('data/textures/stones.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+stones = [stones, get_average_color(io.imread('data/textures/stones.png')[:, :, :-1])]
 flowers = pygame.image.load('data/textures/flowers.png').convert()
 flowers.set_colorkey((0, 0, 0))
-flowers = [flowers, io.imread('data/textures/flowers.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+flowers = [flowers, get_average_color(io.imread('data/textures/flowers.png')[:, :, :-1])]
 herb = pygame.image.load('data/textures/herb.png').convert()
 herb.set_colorkey((0, 0, 0))
-herb = [herb, io.imread('data/textures/herb.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+herb = [herb, get_average_color(io.imread('data/textures/herb.png')[:, :, :-1])]
 planks = pygame.image.load('data/textures/planks.png').convert()
 planks.set_colorkey((0, 0, 0))
-planks = [planks, io.imread('data/textures/planks.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+planks = [planks, get_average_color(io.imread('data/textures/planks.png')[:, :, :-1])]
 wood = pygame.image.load('data/textures/wood.png').convert()
 wood.set_colorkey((0, 0, 0))
-wood = [wood, io.imread('data/textures/wood.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+wood = [wood, get_average_color(io.imread('data/textures/wood.png')[:, :, :-1])]
 foliage = pygame.image.load('data/textures/foliage.png').convert()
 foliage.set_colorkey((0, 0, 0))
-foliage = [foliage, io.imread('data/textures/foliage.png')[:, :, :-1].mean(axis=0).mean(axis=0)]
+foliage = [foliage, get_average_color(io.imread('data/textures/foliage.png')[:, :, :-1])]
 foliage_with_cone = pygame.image.load('data/textures/foliage_with_cone.png').convert()
 foliage_with_cone.set_colorkey((0, 0, 0))
 foliage_with_cone = [foliage_with_cone,
-                     io.imread('data/textures/foliage_with_cone.png')[:, :, :-1].mean(axis=0).mean(
-                         axis=0)]
+                     get_average_color(io.imread('data/textures/foliage_with_cone.png')[:, :, :-1])]
 
 
 def get_texture(n):

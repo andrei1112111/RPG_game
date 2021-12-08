@@ -33,7 +33,6 @@ class MiniMap:
         around_player_mapping = []
         limit_x = len(self.mapping)
         limit_y = len(self.mapping[0])
-        print(self.player.hero_pos)
         for x_color in range(self.player.hero_pos[1] - 20, self.player.hero_pos[1] + 20):
             buffer = []
             for y_color in range(self.player.hero_pos[0] - 20, self.player.hero_pos[0] + 20):

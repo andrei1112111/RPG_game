@@ -1,3 +1,6 @@
+import itertools
+import time
+
 import pygame
 from map import map1
 from runTo import pers_go_to
@@ -20,11 +23,12 @@ class Player:
         self.anim_list = []
         self.event_anim = pygame.USEREVENT + 1
         self.eblock = False
-        pygame.time.set_timer(self.event_anim, 1500)
+        self.frame_animation = itertools.cycle([0, 1, 2, 3, 4, 5])
+        pygame.time.set_timer(self.event_anim, 100)
 
     def check_interaction(self):
         if not self.eblock:
-            if map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 2] == 10:
+            if map1[self.hero_pos[1]][self.hero_pos[0]][self.z + 2] == 10:
                 self.anim = ('ch_block', [[0, 1, 2], [0, 1, 3], [0, 2, 2], [0, 2, 3]], 3)
                 self.eblock = True
 
@@ -45,7 +49,6 @@ class Player:
             self.hero_pos0 = self.hero_pos
 
     def do_anim(self):
-        # print(self.anim[0])
         match self.anim[0]:
             case 'button':
                 if [self.hero_pos[0], self.hero_pos[1], self.z + 1] == self.anim[1]:
@@ -66,9 +69,31 @@ class Player:
                     map1[dot[0]][dot[1]][dot[2]] = self.anim[2]
                 self.eblock = False
                 self.anim = ('none', [], [])
+        if self.move:
+            match self.move[0]:
+                case 'down':
+                    self.animation('runs_f2f')
+                case 'up':
+                    self.animation('runs_back')
+                case 'left':
+                    self.animation('runs_side', mirror=True)
+                case 'right':
+                    self.animation('runs_side')
+        else:
+            self.animation('stands')
+
+    def animation(self, folder, mirror=False):
+        frame = self.frame_animation.__next__()
+        if mirror:
+            buffer = pygame.image.load(f'data/characters/diluc/{folder}/{frame}.png').convert()
+            buffer = pygame.transform.flip(buffer, True, False)
+        else:
+            buffer = pygame.image.load(f'data/characters/diluc/{folder}/{frame}.png').convert()
+        self.img = buffer
+        self.img.set_colorkey((0, 0, 0))
 
     def get_bottom(self):
-        return map1[self.hero_pos[0]][self.hero_pos[1]][self.z + 1]
+        return map1[self.hero_pos[1]][self.hero_pos[0]][self.z + 1]
 
     def event(self):
         if self.move:

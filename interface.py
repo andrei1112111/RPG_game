@@ -1,7 +1,9 @@
-import cv2
+import time
+
 import numpy as np
 from map import map1
 from texture import get_mini_texture
+from pygame import gfxdraw
 
 
 class MiniMap:
@@ -44,27 +46,22 @@ class MiniMap:
         return around_player_mapping
 
     def display_minimap(self):
+        fast_display = self.display
         apm = self.get_around_player_mapping()
         for index_y, yy in enumerate(apm):
             for index_x, color in enumerate(yy):
-                poses = [
-                    self.position[0] + index_x,
-                    self.position[1] + index_y,
-                    1,
-                    1
-                ]
-                poses_board = [
-                    self.position[0],
-                    self.position[0],
-                    40,
-                    40
-                ]
-                poses_player = [
-                    self.position[0] + 20,
-                    self.position[0] + 20,
-                    1,
-                    1
-                ]
-                self.pygame.draw.rect(self.display, self.pygame.Color(color), poses)
-                self.pygame.draw.rect(self.display, self.pygame.Color('white'), poses_player)
-                self.pygame.draw.rect(self.display, self.border_color, poses_board, width=1)
+                fast_display.set_at((self.position[0] + index_x, self.position[1] + index_y), color)
+        poses_board = [
+            self.position[0],
+            self.position[0],
+            40,
+            40
+        ]
+        poses_player = [
+            self.position[0] + 20,
+            self.position[0] + 20,
+            1,
+            1
+        ]
+        self.pygame.draw.rect(self.display, self.border_color, poses_board, width=1)
+        self.pygame.draw.rect(self.display, self.pygame.Color('white'), poses_player)

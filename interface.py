@@ -3,7 +3,6 @@ import time
 import numpy as np
 from map import map1
 from texture import get_mini_texture
-from pygame import gfxdraw
 
 
 class MiniMap:

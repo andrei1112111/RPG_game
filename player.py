@@ -1,5 +1,4 @@
 import itertools
-import time
 
 import pygame
 from map import map1

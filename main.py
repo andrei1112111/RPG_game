@@ -15,7 +15,7 @@ player = Player()
 minimap = MiniMap(player, pygame, display)
 
 while True:
-    clock.tick(60)
+    clock.tick(144)
     pygame.display.set_caption(f'FPS: {round(clock.get_fps())}')
 
     display.fill((0, 0, 0))
@@ -25,7 +25,8 @@ while True:
             for z, tile in enumerate(height):
                 if tile:
                     display.blit(get_texture(tile), ((150 + x * 10 - y * 10) + x_pos,  # X
-                                                     (100 + x * 5 + y * 5 - ((z + 1) * 14)) + y_pos))  # y
+                                                     (100 + x * 5 + y * 5 - (
+                                                                 (z + 1) * 14)) + y_pos))  # y
 
     player.get_move()
     player.event()

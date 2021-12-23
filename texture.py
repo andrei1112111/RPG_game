@@ -8,8 +8,8 @@ def get_average_color(mapp):
     for line in mapp:
         for elem in line:
             if elem[0] != 0 and \
-                    elem[0] != 0 and \
-                    elem[0] != 0:
+                    elem[1] != 0 and \
+                    elem[2] != 0:
                 counter += 1
                 r += int(elem[0])
                 g += elem[1]
@@ -42,6 +42,9 @@ foliage_with_cone = pygame.image.load('data/textures/foliage_with_cone.png').con
 foliage_with_cone.set_colorkey((0, 0, 0))
 foliage_with_cone = [foliage_with_cone,
                      get_average_color(io.imread('data/textures/foliage_with_cone.png')[:, :, :-1])]
+grass2 = pygame.image.load('data/textures/grass2.png').convert()
+grass2.set_colorkey((0, 0, 0))
+grass2 = [grass2, get_average_color(io.imread('data/textures/grass2.png')[:, :, :-1])]
 
 
 def get_texture(n):
@@ -62,6 +65,8 @@ def get_texture(n):
             return foliage[0]
         case 8:
             return foliage_with_cone[0]
+        case 9:
+            return grass2[0]
 
 
 def get_mini_texture(n):
@@ -82,3 +87,5 @@ def get_mini_texture(n):
             return foliage[-1]
         case 8:
             return foliage_with_cone[-1]
+        case 9:
+            return grass2[-1]

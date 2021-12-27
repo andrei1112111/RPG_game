@@ -1,15 +1,14 @@
-import itertools
+import datetime
 import os
-import time
 from itertools import cycle
-
 import pygame
 import pyperclip as clipboard
 
-CELL_SIZE = 30
-X_SIZE = 5
-Y_SIZE = 3
+CELL_SIZE = 20
+X_SIZE = 75
+Y_SIZE = 45
 Z_SIZE = 32
+
 INDEX_MAP = [[[0 for _ in range(Z_SIZE)] for _ in range(Y_SIZE)] for _ in range(X_SIZE)]
 
 TEXTURE_INDEX_MAP = {
@@ -23,7 +22,19 @@ TEXTURE_INDEX_MAP = {
     'data/textures/AIR.png': 0,
     'data/textures/planks.png': 5,
     'data/textures/grass2.png': 9,
+    'data/textures/cobblestone.png': 10,
+    'data/textures/dirt.png': 11,
+    'data/textures/water.png': 12,
+    'data/textures/glass.png': 13,
+    'data/textures/tree.png': 14,
 }
+try:
+    from map import map1
+    with open(f'backups/backup-{datetime.datetime.now().strftime("%Y-%m-%d %H-%M")}.txt', mode='w') as f:
+        f.write(str(map1))
+    existing_map = map1
+except ImportError:
+    existing_map = None
 
 
 class Texture(pygame.sprite.Sprite):
@@ -31,6 +42,7 @@ class Texture(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load(file_path).convert(),
                                             (CELL_SIZE - 3, CELL_SIZE - 3))
+        self.file_path = file_path
         self.rect = self.image.get_rect()
         self.texture_index = TEXTURE_INDEX_MAP[file_path]
 
@@ -47,12 +59,37 @@ class Board:
         self.cells_matrix = []
         self.all_sprites = all_sprites
         self.current_point_X, self.current_point_Y = [0, 0]
-        self.myfont = pygame.font.SysFont('Times New Romans', 25)
+        self.myfont = pygame.font.SysFont('Times New Romans', 18)
 
     def set_view(self, left, top, cell_size):
         self.left = left
         self.top = top
         self.cell_size = cell_size
+
+    def load(self, ex_map):
+        global INDEX_MAP
+        INDEX_MAP = ex_map
+        self.cells_matrix = [[[0 for _ in range(Z_SIZE)] for _ in range(Y_SIZE)] for _ in range(X_SIZE)]
+        for x_index, x in enumerate(list(reversed(ex_map))):
+            for y_index, y in enumerate(x):
+                clrs = cycle(self.all_sprites)
+                new_current_texture = next(clrs)
+                upper_texture = None
+                texture_level_index = 0
+                for index, z in list(reversed(list(enumerate(y)))):
+                    if z != 0:
+                        upper_texture = z
+                        texture_level_index = index
+                        break
+                if upper_texture:
+                    for key in TEXTURE_INDEX_MAP.keys():
+                        if TEXTURE_INDEX_MAP[key] == upper_texture:
+                            while new_current_texture.file_path != key:
+                                new_current_texture = next(clrs)
+                            self.cells_matrix[x_index][y_index] = [clrs, new_current_texture, texture_level_index]
+                else:
+                    self.cells_matrix[x_index][y_index] = [clrs, new_current_texture, texture_level_index]
+
 
     def render(self, screen):
         for x in range(self.width):
@@ -75,15 +112,16 @@ class Board:
                self.cell_size]
         pygame.draw.rect(screen, pygame.Color('red'), sss, width=4)
 
-        for xxx in range(self.width):
-            for yyy in range(self.height):
-                sss = (1 + self.left + self.cell_size * xxx, 1 + self.top + self.cell_size * yyy)
-                textr = self.cells_matrix[xxx][yyy][1]
+        for x in range(self.width):
+            for y in range(self.height):
+                sss = (1 + self.left + self.cell_size * x, 1 + self.top + self.cell_size * y)
+                textr = self.cells_matrix[x][y][1]
                 textr.rect.topleft = sss
-                buffer_sprites = pygame.sprite.Group()
-                buffer_sprites.add(textr)
-                buffer_sprites.draw(screen)
-                textsurface = self.myfont.render(str(self.cells_matrix[xxx][yyy][-1]), False,
+                # buffer_sprites = pygame.sprite.Group()
+                # buffer_sprites.add(textr)
+                # buffer_sprites.draw(screen)
+                screen.blit(textr.image, sss)
+                textsurface = self.myfont.render(str(self.cells_matrix[x][y][-1]), False,
                                                  (210, 210, 210))
                 screen.blit(textsurface, sss)
 
@@ -121,7 +159,7 @@ class Board:
             for yi, cell in enumerate(line):
                 if INDEX_MAP[xi][yi][cell[2]] == 0:
                     INDEX_MAP[xi][yi][cell[2]] = cell[1].texture_index
-        print('saved')
+        print('Saved')
 
     def printing(self):
         clipboard.copy(str(INDEX_MAP))
@@ -129,17 +167,17 @@ class Board:
 
     def dot_save(self):
         cell = self.cells_matrix[self.current_point_X][self.current_point_Y]
-        if INDEX_MAP[abs(self.current_point_X - (X_SIZE-1))][self.current_point_Y][cell[2]] == 0:
-            INDEX_MAP[abs(self.current_point_X - (X_SIZE-1))][self.current_point_Y][cell[2]] = \
+        if INDEX_MAP[abs(self.current_point_X - (X_SIZE - 1))][self.current_point_Y][cell[2]] == 0:
+            INDEX_MAP[abs(self.current_point_X - (X_SIZE - 1))][self.current_point_Y][cell[2]] = \
                 cell[1].texture_index
             print(f'saved x-{self.current_point_X} y-{self.current_point_Y}')
             return
-        print('error')
+        print('Error')
         return
 
     def delete_dot(self):
         cell = self.cells_matrix[self.current_point_X][self.current_point_Y]
-        INDEX_MAP[abs(self.current_point_X - (X_SIZE-1))][self.current_point_Y][cell[2]] = 0
+        INDEX_MAP[abs(self.current_point_X - (X_SIZE - 1))][self.current_point_Y][cell[2]] = 0
         print('deleted')
 
     def p_up(self):
@@ -164,13 +202,12 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((X_SIZE * CELL_SIZE + 20, Y_SIZE * CELL_SIZE + 20))
     pygame.display.set_caption('DIZIGNER')
-
     all_sprites = pygame.sprite.Group()
     buffer_textures = []
     for d, dirs, files in os.walk('data/textures/'):
         for f in files:
             buffer_textures.append(str(d + f))
-    buffer_textures[-3], buffer_textures[0] = buffer_textures[0], buffer_textures[-3]
+    buffer_textures[8], buffer_textures[0] = buffer_textures[0], buffer_textures[8]
     for fil in buffer_textures:
         fileT = Texture(fil)
         all_sprites.add(fileT)
@@ -178,8 +215,10 @@ def main():
     board = Board(X_SIZE, Y_SIZE, all_sprites)
     running = True
     clock = pygame.time.Clock()
+    if existing_map:
+        board.load(existing_map)
     while running:
-        clock.tick(144)
+        clock.tick(200)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

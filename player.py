@@ -1,7 +1,7 @@
 import itertools
 
 import pygame
-from map import map1, map2
+from map import map1
 from runTo import pers_go_to
 
 

@@ -7,13 +7,13 @@ def get_average_color(mapp):
     counter = 0
     for line in mapp:
         for elem in line:
-            if elem[0] != 0 and \
-                    elem[1] != 0 and \
-                    elem[2] != 0:
+            if elem[0] != 0 or \
+                    elem[1] != 0 or \
+                    elem[-1] != 0:
                 counter += 1
                 r += int(elem[0])
                 g += elem[1]
-                b += elem[2]
+                b += elem[-1]
     return [int(r / counter), int(g / counter), int(b / counter)]
 
 
@@ -45,6 +45,22 @@ foliage_with_cone = [foliage_with_cone,
 grass2 = pygame.image.load('data/textures/grass2.png').convert()
 grass2.set_colorkey((0, 0, 0))
 grass2 = [grass2, get_average_color(io.imread('data/textures/grass2.png')[:, :, :-1])]
+cobblestone = pygame.image.load('data/textures/cobblestone.png').convert()
+cobblestone.set_colorkey((0, 0, 0))
+cobblestone = [cobblestone, get_average_color(io.imread('data/textures/cobblestone.png')[:, :, :-1])]
+dirt = pygame.image.load('data/textures/dirt.png').convert()
+dirt.set_colorkey((0, 0, 0))
+dirt = [dirt, get_average_color(io.imread('data/textures/dirt.png')[:, :, :-1])]
+water = pygame.image.load('data/textures/water.png').convert()
+water.set_colorkey((0, 0, 0))
+water = [water, get_average_color(io.imread('data/textures/water.png')[:, :, :-1])]
+glass = pygame.image.load('data/textures/glass.png').convert()
+glass.set_colorkey((0, 0, 0))
+glass.set_alpha(200)
+glass = [glass, get_average_color(io.imread('data/textures/glass.png')[:, :, :-1])]
+tree = pygame.image.load('data/textures/tree.png').convert()
+tree.set_colorkey((0, 0, 0))
+tree = [tree, get_average_color(io.imread('data/textures/tree.png')[:, :, :-1])]
 
 
 def get_texture(n):
@@ -67,6 +83,16 @@ def get_texture(n):
             return foliage_with_cone[0]
         case 9:
             return grass2[0]
+        case 10:
+            return cobblestone[0]
+        case 11:
+            return dirt[0]
+        case 12:
+            return water[0]
+        case 13:
+            return glass[0]
+        case 14:
+            return tree[0]
 
 
 def get_mini_texture(n):
@@ -89,3 +115,13 @@ def get_mini_texture(n):
             return foliage_with_cone[-1]
         case 9:
             return grass2[-1]
+        case 10:
+            return cobblestone[-1]
+        case 11:
+            return dirt[-1]
+        case 12:
+            return water[-1]
+        case 13:
+            return glass[-1]
+        case 14:
+            return tree[-1]

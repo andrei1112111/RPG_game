@@ -14,7 +14,10 @@ def get_average_color(mapp):
                 r += int(elem[0])
                 g += elem[1]
                 b += elem[-1]
-    return [int(r / counter), int(g / counter), int(b / counter)]
+    if counter != 0:
+        return [int(r / counter), int(g / counter), int(b / counter)]
+    else:
+        return [0, 0, 0]
 
 
 grass = pygame.image.load('data/textures/grass.png').convert()
@@ -61,6 +64,12 @@ glass = [glass, get_average_color(io.imread('data/textures/glass.png')[:, :, :-1
 tree = pygame.image.load('data/textures/tree.png').convert()
 tree.set_colorkey((0, 0, 0))
 tree = [tree, get_average_color(io.imread('data/textures/tree.png')[:, :, :-1])]
+house = pygame.image.load('data/textures/house.png').convert()
+house.set_colorkey((0, 0, 0))
+house = [house, get_average_color(io.imread('data/textures/house.png')[:, :, :-1])]
+empty = pygame.image.load('data/textures/empty.png').convert()
+empty.set_colorkey((0, 0, 0))
+empty = [empty, get_average_color(io.imread('data/textures/empty.png')[:, :, :-1])]
 
 
 def get_texture(n):
@@ -93,6 +102,10 @@ def get_texture(n):
             return glass[0]
         case 14:
             return tree[0]
+        case 15:
+            return house[0]
+        case 99:
+            return empty[0]
 
 
 def get_mini_texture(n):
@@ -125,3 +138,7 @@ def get_mini_texture(n):
             return glass[-1]
         case 14:
             return tree[-1]
+        case 15:
+            return house[-1]
+        case 99:
+            return empty[-1]

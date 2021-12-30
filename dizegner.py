@@ -27,9 +27,12 @@ TEXTURE_INDEX_MAP = {
     'data/textures/water.png': 12,
     'data/textures/glass.png': 13,
     'data/textures/tree.png': 14,
+    'data/textures/house.png': 15,
+    'data/textures/empty.png': 99,
 }
 try:
     from map import map1
+
     with open(f'backups/backup-{datetime.datetime.now().strftime("%Y-%m-%d %H-%M")}.txt', mode='w') as f:
         f.write(str(map1))
     existing_map = map1
@@ -89,7 +92,6 @@ class Board:
                             self.cells_matrix[x_index][y_index] = [clrs, new_current_texture, texture_level_index]
                 else:
                     self.cells_matrix[x_index][y_index] = [clrs, new_current_texture, texture_level_index]
-
 
     def render(self, screen):
         for x in range(self.width):

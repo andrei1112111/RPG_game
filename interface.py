@@ -50,17 +50,7 @@ class MiniMap:
         for index_y, yy in enumerate(apm):
             for index_x, color in enumerate(yy):
                 fast_display.set_at((self.position[0] + index_x, self.position[1] + index_y), color)
-        poses_board = [
-            self.position[0],
-            self.position[0],
-            40,
-            40
-        ]
-        poses_player = [
-            self.position[0] + 20,
-            self.position[0] + 20,
-            1,
-            1
-        ]
+        poses_board = [self.position[0], self.position[0], 40, 40]
+        poses_player = [self.position[0] + 20, self.position[0] + 20, 1, 1]
         self.pygame.draw.rect(self.display, self.border_color, poses_board, width=1)
         self.pygame.draw.rect(self.display, self.pygame.Color('white'), poses_player)

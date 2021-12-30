@@ -17,7 +17,7 @@ def get_average_color(mapp):
     if counter != 0:
         return [int(r / counter), int(g / counter), int(b / counter)]
     else:
-        return [0, 0, 0]
+        return [255, 255, 255]
 
 
 grass = pygame.image.load('data/textures/grass.png').convert()

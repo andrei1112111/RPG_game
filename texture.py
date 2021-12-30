@@ -70,6 +70,18 @@ house = [house, get_average_color(io.imread('data/textures/house.png')[:, :, :-1
 empty = pygame.image.load('data/textures/empty.png').convert()
 empty.set_colorkey((0, 0, 0))
 empty = [empty, get_average_color(io.imread('data/textures/empty.png')[:, :, :-1])]
+lamp_post = pygame.image.load('data/textures/lamp_post.png').convert()
+lamp_post.set_colorkey((0, 0, 0))
+lamp_post = [lamp_post, get_average_color(io.imread('data/textures/lamp_post.png')[:, :, :-1])]
+street_sign = pygame.image.load('data/textures/street_sign.png').convert()
+street_sign.set_colorkey((0, 0, 0))
+street_sign = [street_sign, get_average_color(io.imread('data/textures/street_sign.png')[:, :, :-1])]
+snowman = pygame.image.load('data/textures/snowman.png').convert()
+snowman.set_colorkey((0, 0, 0))
+snowman = [snowman, get_average_color(io.imread('data/textures/snowman.png')[:, :, :-1])]
+dried = pygame.image.load('data/textures/dried.png').convert()
+dried.set_colorkey((0, 0, 0))
+dried = [dried, get_average_color(io.imread('data/textures/dried.png')[:, :, :-1])]
 
 
 def get_texture(n):
@@ -104,6 +116,14 @@ def get_texture(n):
             return tree[0]
         case 15:
             return house[0]
+        case 16:
+            return lamp_post[0]
+        case 17:
+            return street_sign[0]
+        case 18:
+            return snowman[0]
+        case 19:
+            return dried[0]
         case 99:
             return empty[0]
 
@@ -140,5 +160,13 @@ def get_mini_texture(n):
             return tree[-1]
         case 15:
             return house[-1]
+        case 16:
+            return lamp_post[-1]
+        case 17:
+            return street_sign[-1]
+        case 18:
+            return snowman[-1]
+        case 19:
+            return dried[-1]
         case 99:
             return empty[-1]

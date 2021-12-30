@@ -12,26 +12,30 @@ Z_SIZE = 32
 INDEX_MAP = [[[0 for _ in range(Z_SIZE)] for _ in range(Y_SIZE)] for _ in range(X_SIZE)]
 
 TEXTURE_INDEX_MAP = {
-    'data/textures/grass.png': 1,
-    'data/textures/flowers.png': 3,
-    'data/textures/foliage_with_cone.png': 8,
-    'data/textures/foliage.png': 7,
-    'data/textures/wood.png': 6,
-    'data/textures/herb.png': 4,
-    'data/textures/stones.png': 2,
-    'data/textures/AIR.png': 0,
-    'data/textures/planks.png': 5,
-    'data/textures/grass2.png': 9,
-    'data/textures/cobblestone.png': 10,
-    'data/textures/dirt.png': 11,
-    'data/textures/water.png': 12,
-    'data/textures/glass.png': 13,
-    'data/textures/tree.png': 14,
-    'data/textures/house.png': 15,
-    'data/textures/empty.png': 99,
+    'data/textures/blocks/grass.png': 1,
+    'data/textures/blocks/flowers.png': 3,
+    'data/textures/blocks/foliage_with_cone.png': 8,
+    'data/textures/blocks/foliage.png': 7,
+    'data/textures/blocks/wood.png': 6,
+    'data/textures/blocks/herb.png': 4,
+    'data/textures/blocks/stones.png': 2,
+    'data/textures/blocks/AIR.png': 0,
+    'data/textures/blocks/planks.png': 5,
+    'data/textures/blocks/grass2.png': 9,
+    'data/textures/blocks/cobblestone.png': 10,
+    'data/textures/blocks/dirt.png': 11,
+    'data/textures/blocks/water.png': 12,
+    'data/textures/blocks/glass.png': 13,
+    'data/textures/blocks/tree.png': 14,
+    'data/textures/blocks/house.png': 15,
+    'data/textures/blocks/lamp_post.png': 16,
+    'data/textures/blocks/street_sign.png': 17,
+    'data/textures/blocks/snowman.png': 18,
+    'data/textures/blocks/dried.png': 19,
+    'data/textures/blocks/empty.png': 99,
 }
 try:
-    from map import map1
+    from map import island as map1
 
     with open(f'backups/backup-{datetime.datetime.now().strftime("%Y-%m-%d %H-%M")}.txt', mode='w') as f:
         f.write(str(map1))
@@ -164,8 +168,11 @@ class Board:
         print('Saved')
 
     def printing(self):
-        clipboard.copy(str(INDEX_MAP))
-        print('Copied into buffer...')
+        with open(f'map.py', mode='w') as f:
+            f.write('island = ' + str(INDEX_MAP))
+        print('Writed.')
+        # clipboard.copy(str(INDEX_MAP))
+        # print('Copied into buffer...')
 
     def dot_save(self):
         cell = self.cells_matrix[self.current_point_X][self.current_point_Y]
@@ -206,7 +213,7 @@ def main():
     pygame.display.set_caption('DIZIGNER')
     all_sprites = pygame.sprite.Group()
     buffer_textures = []
-    for d, dirs, files in os.walk('data/textures/'):
+    for d, dirs, files in os.walk('data/textures/blocks/'):
         for f in files:
             buffer_textures.append(str(d + f))
     buffer_textures[8], buffer_textures[0] = buffer_textures[0], buffer_textures[8]

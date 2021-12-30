@@ -1,0 +1,4 @@
+[Давайте подумаем ???]
+~~Посетите блок дерева~~
+wait cords == 0,0,0 → story1 |or| wait cords == 2,2,0 → story2
+exit

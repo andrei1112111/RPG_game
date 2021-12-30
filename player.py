@@ -103,8 +103,7 @@ class Player:
                     self.anim = 'button', [self.hero_pos[0], self.hero_pos[1], self.z + 1], 1
 
     def move_to(self):
-        # print(self.hero_pos)
-        if self.clock == 15:
+        if self.clock == 2:
             if self.move:
                 to = self.move.pop(0)
                 match to:
@@ -117,7 +116,7 @@ class Player:
                     case 'right':
                         self.hero_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
         self.clock += 1
-        if self.clock == 16:
+        if self.clock == 3:
             self.clock = 0
 
     def get_move(self):

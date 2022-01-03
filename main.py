@@ -1,3 +1,5 @@
+from random import randint
+
 import pygame
 from configparser import ConfigParser
 
@@ -16,6 +18,7 @@ def main():
     camera = Vector2(int(config['graphics']['width']) // 2, int(config['graphics']['height']) // 2)
     player = Player((270, 180), screen, all_sprites)
     interface = Interface()
+    snowflakes = SnowWind(screen, 150, speed=5)
     offset = 0, 0
 
     event_10in_second = pygame.USEREVENT + 1
@@ -26,7 +29,7 @@ def main():
     storyDirector = StoryDirector()
 
     while True:
-        screen.fill((30, 30, 30))
+        screen.fill((240, 240, 240))
 
         for event in pygame.event.get():
             if event.type == event_10in_second:
@@ -73,6 +76,11 @@ def main():
                                 yp = (100 + x * 20 + y * 20 - ((z + 1) * 56 + y_pos))
                                 if -100 < yp < 1180:
                                     screen.blit(get_texture(tile), (xp, yp))
+
+        """↓↓↓Cнежинки↓↓↓"""
+        snowflakes.display(heading) # <-- плавность сдвига снежинок
+        """↑↑↑Cнежинки↑↑↑"""
+
         """↓↓↓Интерфейс↓↓↓"""
         # HP
         x, y = 1860, 20
@@ -89,7 +97,7 @@ def main():
 if __name__ == '__main__':
     from map import island
     from objects import Player
-    from interface import Interface
+    from interface import Interface, SnowWind
     from pygame.math import Vector2
     from storyDirector import StoryDirector
     from load import get_texture

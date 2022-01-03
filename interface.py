@@ -1,6 +1,7 @@
 from configparser import ConfigParser
 from itertools import chain, cycle
 import pygame
+import random
 
 config = ConfigParser()
 config.read('config.ini')
@@ -48,3 +49,47 @@ class Interface:
 
     def training(self, key):
         pass
+
+
+class SnowWind:
+    def __init__(self, screen, number_snowflakes=0, speed=1, k=0.1):
+
+        self.screen = screen
+        self.snowflakes = []
+        self.number_snowflakes = number_snowflakes
+        self.width = int(config['graphics']['width'])
+        self.height = int(config['graphics']['height'])
+        self.speed = speed
+        self.k = k
+        for _ in range(number_snowflakes):
+            x = random.randrange(0, self.width)
+            y = random.randrange(0, self.height)
+            self.snowflakes.append([x, y])
+        self.snowflake_color = pygame.Color('gray')
+
+    def display(self, moving):
+        moving = -moving
+        for index_flake in range(self.number_snowflakes):
+            pygame.draw.circle(self.screen, self.snowflake_color, self.snowflakes[index_flake], 3)
+            self.snowflakes[index_flake][1] += self.speed
+            self.snowflakes[index_flake] += (moving * self.k)
+            if self.snowflakes[index_flake][1] > self.height:
+                y = random.randrange(0, 50)
+                self.snowflakes[index_flake][1] = -y
+                x = random.randrange(0, self.width)
+                self.snowflakes[index_flake][0] = x
+            if self.snowflakes[index_flake][1] < 0:
+                y = random.randrange(self.height + 0, self.height + 50)
+                self.snowflakes[index_flake][1] = y
+                x = random.randrange(0, self.width)
+                self.snowflakes[index_flake][0] = x
+            if self.snowflakes[index_flake][0] < 0:
+                y = random.randrange(0, self.height)
+                self.snowflakes[index_flake][1] = y
+                x = random.randrange(self.width + 0, self.width + 50)
+                self.snowflakes[index_flake][0] = x
+            if self.snowflakes[index_flake][0] > self.width:
+                y = random.randrange(0, self.height)
+                self.snowflakes[index_flake][1] = y
+                x = random.randrange(0, 50)
+                self.snowflakes[index_flake][0] = -x

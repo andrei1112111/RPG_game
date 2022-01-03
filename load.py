@@ -116,7 +116,10 @@ dried = pygame.image.load('data/textures/blocks/dried.png').convert()
 dried.set_colorkey((0, 0, 0))
 dried = pygame.transform.scale(dried, (dried.get_rect().width * 4, dried.get_rect().height * 4))
 dried = [dried, get_average_color(io.imread('data/textures/blocks/dried.png')[:, :, :-1])]
-
+sign_post = pygame.image.load('data/textures/blocks/sign-post.png').convert()
+sign_post.set_colorkey((0, 0, 0))
+sign_post = pygame.transform.scale(sign_post, (80, 96))
+sign_post = [sign_post, get_average_color(io.imread('data/textures/blocks/sign-post.png')[:, :, :-1])]
 
 
 def get_texture(n):
@@ -159,6 +162,8 @@ def get_texture(n):
             return snowman[0]
         case 19:
             return dried[0]
+        case 20:
+            return sign_post[0]
         case 99:
             return empty[0]
 
@@ -203,5 +208,7 @@ def get_mini_texture(n):
             return snowman[-1]
         case 19:
             return dried[-1]
+        case 20:
+            return sign_post[-1]
         case 99:
             return empty[-1]

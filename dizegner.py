@@ -32,6 +32,7 @@ TEXTURE_INDEX_MAP = {
     'data/textures/blocks/street_sign.png': 17,
     'data/textures/blocks/snowman.png': 18,
     'data/textures/blocks/dried.png': 19,
+    'data/textures/blocks/sign-post.png': 20,
     'data/textures/blocks/empty.png': 99,
 }
 try:

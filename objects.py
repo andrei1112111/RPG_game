@@ -133,5 +133,4 @@ class Player(pygame.sprite.Sprite):
         # Передвижение
         if self.correct_move(offset, pos):
             self.pos += self.vel
-            print(self.pos)
             self.rect.center = self.pos

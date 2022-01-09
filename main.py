@@ -3,6 +3,10 @@ from random import randint
 import pygame
 from configparser import ConfigParser
 
+import transparency as transparency
+
+from gif import GIFImage
+
 pygame.init()
 
 config = ConfigParser()
@@ -18,7 +22,7 @@ def main():
     camera = Vector2(int(config['graphics']['width']) // 2, int(config['graphics']['height']) // 2)
     player = Player((270, 180), screen, all_sprites)
     interface = Interface()
-    snowflakes = SnowWind(screen, 150, speed=5)
+    snowflakes = SnowWind(screen, 100, speed=5)
     offset = 0, 0
 
     event_10in_second = pygame.USEREVENT + 1
@@ -28,6 +32,37 @@ def main():
 
     storyDirector = StoryDirector()
 
+    # Экран предзагрузки
+    background = GIFImage("data/interface/background/gif2.gif", scale=2.2)
+    pygame.font.init()
+    font = pygame.font.SysFont('Trebuchet MS', 30)
+    textsurface = font.render('Нажмите клавишу', False, (255, 255, 255))
+    bold_font = pygame.font.SysFont('Arial Black', 30)
+    bold_textsurface = bold_font.render('Enter', False, (255, 255, 255))
+    transparency = 255
+    smoothness = False
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and not smoothness:
+                    smoothness = True
+                if event.key == pygame.K_ESCAPE:
+                    exit(-2)
+        screen.fill((0, 0, 0))
+        background.render(screen, (int(config['graphics']['width']) // 2 - background.get_width() // 2,
+                                   int(config['graphics']['height']) // 2 - background.get_height() // 2),
+                          transparency=transparency)
+        screen.blit(textsurface, (int(config['graphics']['width']) - 450, int(config['graphics']['height']) - 100))
+        screen.blit(bold_textsurface, (int(config['graphics']['width']) - 185, int(config['graphics']['height']) - 102))
+        pygame.display.flip()
+        if smoothness:
+            transparency -= 10
+        if transparency <= 0:
+            running = False
+    # Экран игры
     while True:
         screen.fill((240, 240, 240))
 
@@ -78,7 +113,7 @@ def main():
                                     screen.blit(get_texture(tile), (xp, yp))
 
         """↓↓↓Cнежинки↓↓↓"""
-        snowflakes.display(heading) # <-- плавность сдвига снежинок
+        snowflakes.display(heading)  # <-- плавность сдвига снежинок
         """↑↑↑Cнежинки↑↑↑"""
 
         """↓↓↓Интерфейс↓↓↓"""
@@ -103,4 +138,3 @@ if __name__ == '__main__':
     from load import get_texture
 
     main()
-

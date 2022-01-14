@@ -48,6 +48,7 @@ foliage_with_cone = [foliage_with_cone,
 grass2 = pygame.image.load('data/textures/grass2.png').convert()
 grass2.set_colorkey((0, 0, 0))
 grass2 = [grass2, get_average_color(io.imread('data/textures/grass2.png')[:, :, :-1])]
+print(grass2)
 cobblestone = pygame.image.load('data/textures/cobblestone.png').convert()
 cobblestone.set_colorkey((0, 0, 0))
 cobblestone = [cobblestone, get_average_color(io.imread('data/textures/cobblestone.png')[:, :, :-1])]
@@ -82,6 +83,7 @@ snowman = [snowman, get_average_color(io.imread('data/textures/snowman.png')[:, 
 dried = pygame.image.load('data/textures/dried.png').convert()
 dried.set_colorkey((0, 0, 0))
 dried = [dried, get_average_color(io.imread('data/textures/dried.png')[:, :, :-1])]
+
 
 
 def get_texture(n):

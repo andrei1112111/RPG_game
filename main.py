@@ -62,10 +62,11 @@ def main():
             transparency -= 10
         if transparency <= 0:
             running = False
-    # Экран игры
+    transparency = 0
+    black_background = pygame.Surface(int(config['graphics']['width']), int(config['graphics']['height']))
+    black_background.fill((0, 0, 0))
     while True:
         screen.fill((240, 240, 240))
-
         for event in pygame.event.get():
             if event.type == event_10in_second:
                 events = storyDirector.check(player.pos)
@@ -125,6 +126,7 @@ def main():
         """↑↑↑Интерфейс↑↑↑"""
 
         player.correct_move(offset, (960 - camera[0], camera[1] - 540))
+        screen.set_alpha(transparency)
         pygame.display.flip()
         clock.tick(int(config['graphics']['fps']))
 

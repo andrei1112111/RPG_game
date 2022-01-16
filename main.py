@@ -1,5 +1,3 @@
-from random import randint
-
 import pygame
 from configparser import ConfigParser
 
@@ -60,6 +58,7 @@ def main():
             transparency -= 10
         if transparency <= 0:
             running = False
+
     while True:
         screen.fill((240, 240, 240))
         for event in pygame.event.get():
@@ -121,6 +120,14 @@ def main():
 
         player.correct_move(offset, (960 - camera[0], camera[1] - 540))
         screen.set_alpha(transparency)
+        if player.obuch_mg:
+            screen.blit(player.obuch_mg, (1920//2, 1080//2))
+        if k:
+            black_background.set_alpha(k)
+            screen.blit(black_background, (0, 0))
+            k -= int(((k / 255) ** -1) * 10)
+            if k <= 0:
+                k = None
         pygame.display.flip()
         clock.tick(int(config['graphics']['fps']))
 

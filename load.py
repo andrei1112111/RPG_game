@@ -152,6 +152,12 @@ amogus.set_colorkey((0, 0, 0))
 amogus = pygame.transform.scale(amogus, (amogus.get_rect().width * 4, amogus.get_rect().height * 4))
 amogus = [amogus, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
 
+snow = pygame.image.load('data/textures/snow_pieces/0.png').convert()
+snow.set_colorkey((0, 0, 0))
+snow = pygame.transform.scale(snow, (snow.get_rect().width * 4, snow.get_rect().height * 4))
+snow = [snow, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
+
+
 def get_texture(n):
     match n:
         case 1:
@@ -208,6 +214,8 @@ def get_texture(n):
             return door2[0]
         case 27:
             return amogus[0]
+        case 28:
+            return snow[0]
         case 99:
             return empty[0]
 
@@ -268,5 +276,7 @@ def get_mini_texture(n):
             return door2[-1]
         case 27:
             return amogus[-1]
+        case 28:
+            return snow[-1]
         case 99:
             return empty[-1]

@@ -58,7 +58,10 @@ def main():
             transparency -= 10
         if transparency <= 0:
             running = False
-
+    transparency = 0
+    black_background = pygame.Surface((int(config['graphics']['width']), int(config['graphics']['height'])))
+    black_background.fill((33, 33, 33))
+    k = 255
     while True:
         screen.fill((240, 240, 240))
         for event in pygame.event.get():

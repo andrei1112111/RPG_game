@@ -5,9 +5,9 @@ from itertools import cycle
 import pygame
 
 CELL_SIZE = 40
-X_SIZE = 9
-Y_SIZE = 9
-view_x, view_y = 9, 9
+X_SIZE = 75
+Y_SIZE = 45
+view_x, view_y = 10, 10
 Z_SIZE = 32
 
 INDEX_MAP = [[[0 for _ in range(Z_SIZE)] for _ in range(Y_SIZE)] for _ in range(X_SIZE)]
@@ -41,6 +41,8 @@ TEXTURE_INDEX_MAP = {
     'data/textures/blocks/door1.png': 25,
     'data/textures/blocks/door2.png': 26,
     'data/textures/blocks/amogus.png': 27,
+    'data/textures/blocks'
+    '/0.png': 28,
     'data/textures/blocks/empty.png': 99,
 }
 try:

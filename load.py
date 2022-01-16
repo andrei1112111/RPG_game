@@ -86,7 +86,7 @@ water = [water, get_average_color(io.imread('data/textures/blocks/water.png')[:,
 glass = pygame.image.load('data/textures/blocks/glass.png').convert()
 glass.set_colorkey((0, 0, 0))
 glass = pygame.transform.scale(glass, (80, 96))
-glass.set_alpha(200)
+glass.set_alpha(175)
 glass = [glass, get_average_color(io.imread('data/textures/blocks/glass.png')[:, :, :-1])]
 tree = pygame.image.load('data/textures/blocks/tree.png').convert()
 tree.set_colorkey((0, 0, 0))
@@ -120,7 +120,37 @@ sign_post = pygame.image.load('data/textures/blocks/sign-post.png').convert()
 sign_post.set_colorkey((0, 0, 0))
 sign_post = pygame.transform.scale(sign_post, (80, 96))
 sign_post = [sign_post, get_average_color(io.imread('data/textures/blocks/sign-post.png')[:, :, :-1])]
+wallpaperR = pygame.image.load('data/textures/blocks/wallpaperR.png').convert()
+wallpaperR.set_colorkey((0, 0, 0))
+wallpaperR = pygame.transform.scale(wallpaperR, (80, 96))
+wallpaperR = [wallpaperR, get_average_color(io.imread('data/textures/blocks/wallpaperR.png')[:, :, :-1])]
+wallpaperL = pygame.image.load('data/textures/blocks/wallpaperL.png').convert()
+wallpaperL.set_colorkey((0, 0, 0))
+wallpaperL = pygame.transform.scale(wallpaperL, (80, 96))
+wallpaperL = [wallpaperL, get_average_color(io.imread('data/textures/blocks/wallpaperL.png')[:, :, :-1])]
+table = pygame.image.load('data/textures/blocks/table.png').convert()
+table.set_colorkey((0, 0, 0))
+table = pygame.transform.scale(table, (table.get_rect().width * 4, table.get_rect().height * 4))
+table = [table, get_average_color(io.imread('data/textures/blocks/table.png')[:, :, :-1])]
+book_shelf = pygame.image.load('data/textures/blocks/book_shelf.png').convert()
+book_shelf.set_colorkey((0, 0, 0))
+book_shelf = pygame.transform.scale(book_shelf, (book_shelf.get_rect().width * 4, book_shelf.get_rect().height * 4))
+book_shelf = [book_shelf, get_average_color(io.imread('data/textures/blocks/table.png')[:, :, :-1])]
 
+door1 = pygame.image.load('data/textures/blocks/door1.png').convert()
+door1.set_colorkey((0, 0, 0))
+door1 = pygame.transform.scale(door1, (door1.get_rect().width * 4, door1.get_rect().height * 4))
+door1 = [door1, get_average_color(io.imread('data/textures/blocks/door1.png')[:, :, :-1])]
+
+door2 = pygame.image.load('data/textures/blocks/door2.png').convert()
+door2.set_colorkey((0, 0, 0))
+door2 = pygame.transform.scale(door2, (door2.get_rect().width * 4, door2.get_rect().height * 4))
+door2 = [door2, get_average_color(io.imread('data/textures/blocks/door2.png')[:, :, :-1])]
+
+amogus = pygame.image.load('data/textures/blocks/amogus.png').convert()
+amogus.set_colorkey((0, 0, 0))
+amogus = pygame.transform.scale(amogus, (amogus.get_rect().width * 4, amogus.get_rect().height * 4))
+amogus = [amogus, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
 
 def get_texture(n):
     match n:
@@ -164,6 +194,20 @@ def get_texture(n):
             return dried[0]
         case 20:
             return sign_post[0]
+        case 21:
+            return wallpaperR[0]
+        case 22:
+            return wallpaperL[0]
+        case 23:
+            return table[0]
+        case 24:
+            return book_shelf[0]
+        case 25:
+            return door1[0]
+        case 26:
+            return door2[0]
+        case 27:
+            return amogus[0]
         case 99:
             return empty[0]
 
@@ -210,5 +254,19 @@ def get_mini_texture(n):
             return dried[-1]
         case 20:
             return sign_post[-1]
+        case 21:
+            return wallpaperR[-1]
+        case 22:
+            return wallpaperL[-1]
+        case 23:
+            return table[-1]
+        case 24:
+            return book_shelf[-1]
+        case 25:
+            return door1[-1]
+        case 26:
+            return door2[-1]
+        case 27:
+            return amogus[-1]
         case 99:
             return empty[-1]

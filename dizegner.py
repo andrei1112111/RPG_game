@@ -1,12 +1,13 @@
 import datetime
 import os
 from itertools import cycle
-import pygame
-import pyperclip as clipboard
 
-CELL_SIZE = 20
-X_SIZE = 75
-Y_SIZE = 45
+import pygame
+
+CELL_SIZE = 40
+X_SIZE = 9
+Y_SIZE = 9
+view_x, view_y = 9, 9
 Z_SIZE = 32
 
 INDEX_MAP = [[[0 for _ in range(Z_SIZE)] for _ in range(Y_SIZE)] for _ in range(X_SIZE)]
@@ -33,16 +34,34 @@ TEXTURE_INDEX_MAP = {
     'data/textures/blocks/snowman.png': 18,
     'data/textures/blocks/dried.png': 19,
     'data/textures/blocks/sign-post.png': 20,
+    'data/textures/blocks/wallpaperR.png': 21,
+    'data/textures/blocks/wallpaperL.png': 22,
+    'data/textures/blocks/table.png': 23,
+    'data/textures/blocks/book_shelf.png': 24,
+    'data/textures/blocks/door1.png': 25,
+    'data/textures/blocks/door2.png': 26,
+    'data/textures/blocks/amogus.png': 27,
     'data/textures/blocks/empty.png': 99,
 }
 try:
     from map import island as map1
-
     with open(f'backups/backup-{datetime.datetime.now().strftime("%Y-%m-%d %H-%M")}.txt', mode='w') as f:
         f.write(str(map1))
     existing_map = map1
 except ImportError:
     existing_map = None
+
+
+class BColors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 class Texture(pygame.sprite.Sprite):
@@ -56,7 +75,7 @@ class Texture(pygame.sprite.Sprite):
 
 
 class Board:
-    def __init__(self, width, height, all_sprites):
+    def __init__(self, width, height, all_sprites, view_x=False, view_y=False):
         self.width = width
         self.height = height
         self.board = [[0] * width for _ in range(height)]
@@ -66,8 +85,17 @@ class Board:
         self.cells = []
         self.cells_matrix = []
         self.all_sprites = all_sprites
+        self.current_view_X, self.current_view_Y = [0, 0]
         self.current_point_X, self.current_point_Y = [0, 0]
         self.myfont = pygame.font.SysFont('Times New Romans', 18)
+        if view_x:
+            self.view_x = view_x
+        else:
+            self.view_x = width
+        if view_y:
+            self.view_y = view_y
+        else:
+            self.view_y = height
 
     def set_view(self, left, top, cell_size):
         self.left = left
@@ -99,10 +127,11 @@ class Board:
                     self.cells_matrix[x_index][y_index] = [clrs, new_current_texture, texture_level_index]
 
     def render(self, screen):
-        for x in range(self.width):
+        for x in range(self.current_view_X, self.current_view_X + self.view_x):
             buffer = []
-            for y in range(self.height):
-                sss = [self.left + self.cell_size * x, self.top + self.cell_size * y, self.cell_size,
+            for y in range(self.current_view_Y, self.current_view_Y + self.view_y):
+                sss = [self.left + self.cell_size * (x - self.current_view_X),
+                       self.top + self.cell_size * (y - self.current_view_Y), self.cell_size,
                        self.cell_size]
                 if len(self.cells) < self.width * self.height:
                     self.cells.append(
@@ -114,14 +143,15 @@ class Board:
                 pygame.draw.rect(screen, pygame.Color('gray'), sss, width=1)
             if len(self.cells_matrix) < self.width:
                 self.cells_matrix.append(buffer)
-        sss = [self.left + self.cell_size * self.current_point_X,
-               self.top + self.cell_size * self.current_point_Y, self.cell_size,
+        sss = [self.left + self.cell_size * (self.current_point_X - self.current_view_X),
+               self.top + self.cell_size * (self.current_point_Y - self.current_view_Y), self.cell_size,
                self.cell_size]
         pygame.draw.rect(screen, pygame.Color('red'), sss, width=4)
 
-        for x in range(self.width):
-            for y in range(self.height):
-                sss = (1 + self.left + self.cell_size * x, 1 + self.top + self.cell_size * y)
+        for x in range(self.current_view_X, self.view_x + self.current_view_X):
+            for y in range(self.current_view_Y, self.current_view_Y + self.view_y):
+                sss = (1 + self.left + self.cell_size * (x - self.current_view_X),
+                       1 + self.top + self.cell_size * (y - self.current_view_Y))
                 textr = self.cells_matrix[x][y][1]
                 textr.rect.topleft = sss
                 # buffer_sprites = pygame.sprite.Group()
@@ -191,7 +221,6 @@ class Board:
         print('deleted')
 
     def p_up(self):
-
         if 0 <= self.current_point_Y - 1 <= Y_SIZE - 1:
             self.current_point_Y -= 1
 
@@ -207,28 +236,56 @@ class Board:
         if 0 <= self.current_point_X + 1 <= X_SIZE - 1:
             self.current_point_X += 1
 
+    def v_up(self):
+        if 0 <= self.current_view_Y - 1 <= Y_SIZE - 1:
+            self.current_view_Y -= 1
+            self.current_point_Y -= 1
+
+    def v_down(self):
+        if 0 <= self.current_view_Y + 1 <= Y_SIZE - 1:
+            self.current_view_Y += 1
+            self.current_point_Y += 1
+
+    def v_left(self):
+        if 0 <= self.current_view_X - 1 <= X_SIZE - 1:
+            self.current_view_X -= 1
+            self.current_point_X -= 1
+
+    def v_right(self):
+        if 0 <= self.current_view_X + 1 <= X_SIZE - 1:
+            self.current_view_X += 1
+            self.current_point_X += 1
+
+
+def check():
+    if view_x > X_SIZE or view_y > Y_SIZE:
+        print(BColors.FAIL + "Внимание: Параметр величины обзора не может быть больше размера карты!")
+        exit(-2)
+
 
 def main():
+    check()
     pygame.init()
-    screen = pygame.display.set_mode((X_SIZE * CELL_SIZE + 20, Y_SIZE * CELL_SIZE + 20))
+    screen = pygame.display.set_mode((view_x * CELL_SIZE + 20, view_y * CELL_SIZE + 20))
     pygame.display.set_caption('DIZIGNER')
     all_sprites = pygame.sprite.Group()
     buffer_textures = []
     for d, dirs, files in os.walk('data/textures/blocks/'):
         for f in files:
             buffer_textures.append(str(d + f))
-    buffer_textures[8], buffer_textures[0] = buffer_textures[0], buffer_textures[8]
+    switch = 14
+    buffer_textures[switch], buffer_textures[0] = buffer_textures[0], buffer_textures[switch]
     for fil in buffer_textures:
         fileT = Texture(fil)
         all_sprites.add(fileT)
 
-    board = Board(X_SIZE, Y_SIZE, all_sprites)
+    board = Board(X_SIZE, Y_SIZE, all_sprites, view_x=view_x, view_y=view_y)
     running = True
     clock = pygame.time.Clock()
     if existing_map:
         board.load(existing_map)
     while running:
-        clock.tick(200)
+        clock.tick(144)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -256,6 +313,15 @@ def main():
                     board.p_left()
                 if event.key == pygame.K_d:
                     board.p_right()
+
+                if event.key == pygame.K_i:
+                    board.v_up()
+                if event.key == pygame.K_k:
+                    board.v_down()
+                if event.key == pygame.K_j:
+                    board.v_left()
+                if event.key == pygame.K_l:
+                    board.v_right()
 
                 if event.key == pygame.K_p:
                     if pygame.key.get_mods() and pygame.KMOD_CTRL:

@@ -47,13 +47,9 @@ class Interface:
         else:
             return True  # HP максимален
 
-    def training(self, key):
-        pass
-
 
 class SnowWind:
-    def __init__(self, screen, number_snowflakes=0, speed=1, k=0.1):
-
+    def __init__(self, screen, number_snowflakes=0, speed=1, k=0.06):
         self.screen = screen
         self.snowflakes = []
         self.number_snowflakes = number_snowflakes

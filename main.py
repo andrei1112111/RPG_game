@@ -117,7 +117,6 @@ def main():
         """↑↑↑Cнежинки↑↑↑"""
 
         """↓↓↓Интерфейс↓↓↓"""
-        # HP
         x, y = 1860, 20
         for h in interface.get():
             screen.blit(interface.images[h], (x, y))

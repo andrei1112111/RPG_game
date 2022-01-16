@@ -3,11 +3,10 @@ import pygame
 from load import load_numbered
 from pygame.math import Vector2
 from itertools import cycle as infinite_cycle
-from map import island
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, screen, *groups):
+    def __init__(self, pos, screen, mapp, *groups):
         super().__init__(*groups)
         self.screen = screen
         self.image = pygame.image.load('data/textures/characters/diluc/stands/0.png').convert()
@@ -24,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.event_10in_second = pygame.USEREVENT + 1
         self.event_stand = pygame.USEREVENT + 2
         self.event_check = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.event_check, 2000)
+        pygame.time.set_timer(self.event_check, 500)
         self.run_front = load_numbered('data/textures/characters/diluc/runs_f2f')
         self.run_right = load_numbered('data/textures/characters/diluc/runs_side')
         self.run_back = load_numbered('data/textures/characters/diluc/runs_back')
@@ -32,13 +31,19 @@ class Player(pygame.sprite.Sprite):
         self.run_stand = load_numbered('data/textures/characters/diluc/stands')
         self.move = None
         self.home_able = False
+        self.un_home_able = False
         self.obuch_mg = None
         self.botton_e = [pygame.image.load('data/interface/training/e/0.png').convert(),
-                    pygame.image.load('data/interface/training/e/1.png').convert(),
-                    pygame.image.load('data/interface/training/e/2.png').convert()]
-        [i.set_colorkey((0, 0, 0)) for i in self.botton_e]
+                         pygame.image.load('data/interface/training/e/1.png').convert(),
+                         pygame.image.load('data/interface/training/e/2.png').convert(),
+                         pygame.image.load('data/interface/training/e/3.png').convert(),
+                         pygame.image.load('data/interface/training/e/4.png').convert(),
+                         pygame.image.load('data/interface/training/e/5.png').convert()]
+        [i.set_colorkey((255, 255, 255)) for i in self.botton_e]
         self.botton_e = [pygame.transform.scale(i, (80, 96)) for i in self.botton_e]
         self.k = 0
+        self.mapp = mapp
+        self.snow_k = 0
 
     def get_cords(self):
         x = round((self.pos[0] - 140) // 40)
@@ -50,16 +55,28 @@ class Player(pygame.sprite.Sprite):
     def check(self):
         x, y = self.get_cords()
         xh, yh = 41, 10
-        if (x+1 == xh or x-1 == xh or x == xh) and (y+1 == yh or y-1 == yh or y == yh):
+        if (x + 1 == xh or x - 1 == xh or x == xh) and (y + 1 == yh or y - 1 == yh or y == yh):
             self.obuch_mg = self.botton_e[self.k]
-            if self.k == 2:
+            if self.k == 5:
                 self.k = 0
             else:
                 self.k += 1
             self.home_able = True
+        elif (x + 1 == 1 or x - 1 == 1 or x == 1) and (y + 1 == 7 or y - 1 == 7 or y == 7):
+            self.obuch_mg = self.botton_e[self.k]
+            if self.k == 5:
+                self.k = 0
+            else:
+                self.k += 1
+            self.un_home_able = True
+        elif (x + 1 == 50 or x - 1 == 50 or x == 50) and (y + 1 == 12 or y - 1 == 12 or y == 12):
+            self.obuch_mg = self.botton_e[self.k]
+            if pygame.key.get_pressed()[pygame.K_e]:
+                if self.snow_k <= 7:
+                    self.snow_k += 1
         else:
             self.obuch_mg = None
-            self.home_able = False
+            self.home_able = self.un_home_able = False
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -115,9 +132,7 @@ class Player(pygame.sprite.Sprite):
                 self.image.set_colorkey((0, 0, 0))
                 self.image = pygame.transform.scale(self.image, (80, 96))
         if event.type == self.event_check:
-            match self.check():
-                case 'home':
-                    pass
+            self.check()
 
     def pressed(self, key):
         if key[pygame.K_ESCAPE]:
@@ -133,18 +148,27 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_f]:
             print(self.pos)
             print(self.get_cords(), '-----------------------')
+        if key[pygame.K_e]:
+            if self.home_able:
+                self.mapp.k = 1
+                self.pos = Vector2(425, 180)
+                self.rect = self.image.get_rect(center=self.pos)
+            elif self.un_home_able:
+                self.mapp.k = 0
+                self.pos = Vector2(-1005, 1045)
+                self.rect = self.image.get_rect(center=self.pos)
 
     def correct_move(self, offset, pos):
         """Пройдет ли игрок сквозь текстуры или по воздуху"""
         r = [False]
         self.collisons_player.topleft = (
             self.rect.topleft[0] + offset[0] + self.vel.x + 32, self.rect.topleft[1] + offset[1] + self.vel.y + 88)
-        for y, row in enumerate(island):
+        for y, row in enumerate(self.mapp.ret()):
             for x, height in enumerate(row):
                 xp = (150 + x * 40 - y * 40 + pos[0])
                 if -100 < xp < 2020:
                     for z, tile in enumerate(height):
-                        if z == self.pos_z and tile and (not island[y][x][z + 1]):
+                        if z == self.pos_z and tile and (not self.mapp.ret()[y][x][z + 1]):
                             yp = (100 + x * 20 + y * 20 - ((z + 1) * 56 + pos[1]))
                             if -100 < yp < 1180:
                                 # вертикальный квадрат

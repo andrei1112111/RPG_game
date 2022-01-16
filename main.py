@@ -13,10 +13,11 @@ pygame.display.set_caption(config['main']['name'])
 
 
 def main():
+    island = Game_map()
     clock = pygame.time.Clock()
     all_sprites = pygame.sprite.Group()
     camera = Vector2(int(config['graphics']['width']) // 2, int(config['graphics']['height']) // 2)
-    player = Player((270, 180), screen, all_sprites)
+    player = Player((-305, 1005), screen, island, all_sprites)
     interface = Interface()
     snowflakes = SnowWind(screen, 100, speed=5)
     offset = 0, 0
@@ -63,7 +64,7 @@ def main():
     black_background.fill((33, 33, 33))
     k = 255
     while True:
-        screen.fill((240, 240, 240))
+        screen.fill(island.col())
         for event in pygame.event.get():
             if event.type == event_10in_second:
                 events = storyDirector.check(player.pos)
@@ -86,32 +87,33 @@ def main():
         xx = ((-(((x + 1) - y) - 1)) // 2) + 1
         yy = ((x + y) // 2)
         x_pos, y_pos = 960 - camera[0], camera[1] - 540
-        for y, row in enumerate(island):
+        for y, row in enumerate(island.ret()):
             for x, height in enumerate(row):
                 xp = (150 + x * 40 - y * 40 + x_pos)
-                if -3000 < xp < 2220:
+                if -600 < xp < 1920:
                     for z, tile in enumerate(height):
                         if tile:
                             if not (z > player.pos_z and (sum([x, y]) >= sum([xx, yy]))):
                                 yp = (100 + x * 20 + y * 20 - ((z + 1) * 56 + y_pos))
-                                if -300 < yp < 1380:
-                                    screen.blit(get_texture(tile), (xp, yp))
+                                if -600 < yp < 1080:
+                                    screen.blit(get_texture(tile, player.snow_k), (xp, yp))
 
         screen.blit(player.image, player.rect.topleft + offset)
 
-        for y, row in enumerate(island):
+        for y, row in enumerate(island.ret()):
             for x, height in enumerate(row):
                 xp = (150 + x * 40 - y * 40 + x_pos)
-                if -100 < xp < 2020:
+                if 0 < xp < 1920:
                     for z, tile in enumerate(height):
                         if tile:
                             if z > player.pos_z and (sum([x, y]) >= sum([xx, yy])):
                                 yp = (100 + x * 20 + y * 20 - ((z + 1) * 56 + y_pos))
-                                if -100 < yp < 1180:
-                                    screen.blit(get_texture(tile), (xp, yp))
+                                if 0 < yp < 1080:
+                                    screen.blit(get_texture(tile, player.snow_k), (xp, yp))
 
         """↓↓↓Cнежинки↓↓↓"""
-        snowflakes.display(heading)  # <-- плавность сдвига снежинок
+        if not island.k:
+            snowflakes.display(heading)  # <-- плавность сдвига снежинок
         """↑↑↑Cнежинки↑↑↑"""
 
         """↓↓↓Интерфейс↓↓↓"""
@@ -137,7 +139,7 @@ def main():
 
 
 if __name__ == '__main__':
-    from map import island
+    from map import Game_map
     from objects import Player
     from interface import Interface, SnowWind
     from pygame.math import Vector2

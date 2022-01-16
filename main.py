@@ -3,8 +3,6 @@ from random import randint
 import pygame
 from configparser import ConfigParser
 
-import transparency as transparency
-
 from gif import GIFImage
 
 pygame.init()
@@ -20,7 +18,7 @@ def main():
     clock = pygame.time.Clock()
     all_sprites = pygame.sprite.Group()
     camera = Vector2(int(config['graphics']['width']) // 2, int(config['graphics']['height']) // 2)
-    player = Player((270, 180), screen, all_sprites)
+    player = Player((50, 200), screen, all_sprites)
     interface = Interface()
     snowflakes = SnowWind(screen, 100, speed=5)
     offset = 0, 0
@@ -62,9 +60,6 @@ def main():
             transparency -= 10
         if transparency <= 0:
             running = False
-    transparency = 0
-    black_background = pygame.Surface(int(config['graphics']['width']), int(config['graphics']['height']))
-    black_background.fill((0, 0, 0))
     while True:
         screen.fill((240, 240, 240))
         for event in pygame.event.get():
@@ -118,7 +113,6 @@ def main():
         """↑↑↑Cнежинки↑↑↑"""
 
         """↓↓↓Интерфейс↓↓↓"""
-        # HP
         x, y = 1860, 20
         for h in interface.get():
             screen.blit(interface.images[h], (x, y))

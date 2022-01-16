@@ -157,8 +157,31 @@ snow.set_colorkey((0, 0, 0))
 snow = pygame.transform.scale(snow, (snow.get_rect().width * 4, snow.get_rect().height * 4))
 snow = [snow, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
 
+door1 = pygame.image.load('data/textures/blocks/door1.png').convert()
+door1.set_colorkey((0, 0, 0))
+door1 = pygame.transform.scale(door1, (door1.get_rect().width * 4, door1.get_rect().height * 4))
+door1 = [door1, get_average_color(io.imread('data/textures/blocks/door1.png')[:, :, :-1])]
 
-def get_texture(n):
+door2 = pygame.image.load('data/textures/blocks/door2.png').convert()
+door2.set_colorkey((0, 0, 0))
+door2 = pygame.transform.scale(door2, (door2.get_rect().width * 4, door2.get_rect().height * 4))
+door2 = [door2, get_average_color(io.imread('data/textures/blocks/door2.png')[:, :, :-1])]
+
+amogus = pygame.image.load('data/textures/blocks/amogus.png').convert()
+amogus.set_colorkey((0, 0, 0))
+amogus = pygame.transform.scale(amogus, (amogus.get_rect().width * 4, amogus.get_rect().height * 4))
+amogus = [amogus, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
+
+snow = []
+for i in range(8):
+    j = pygame.image.load(f'data/textures/snow_pieces/{i}.png').convert()
+    j.set_colorkey((0, 0, 0))
+    j = pygame.transform.scale(j, (j.get_rect().width * 4, j.get_rect().height * 4))
+    snow.append(j)
+snow.append(empty[0])
+
+
+def get_texture(n, k=0):
     match n:
         case 1:
             return grass[0]
@@ -215,7 +238,7 @@ def get_texture(n):
         case 27:
             return amogus[0]
         case 28:
-            return snow[0]
+            return snow[k][0]
         case 99:
             return empty[0]
 
@@ -276,7 +299,5 @@ def get_mini_texture(n):
             return door2[-1]
         case 27:
             return amogus[-1]
-        case 28:
-            return snow[-1]
         case 99:
             return empty[-1]

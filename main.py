@@ -1,7 +1,7 @@
 import pygame
 from configparser import ConfigParser
 
-from gif import GIFImage
+from gif import GifRuner
 
 pygame.init()
 
@@ -21,16 +21,17 @@ def main():
     interface = Interface()
     snowflakes = SnowWind(screen, 100, speed=5)
     offset = 0, 0
+    pygame.mouse.set_visible(False)
 
     event_10in_second = pygame.USEREVENT + 1
     pygame.time.set_timer(event_10in_second, 100)
 
-    font = pygame.font.SysFont('Comic Sans MS', 30)
+    pygame.font.SysFont('Comic Sans MS', 30)
 
-    storyDirector = StoryDirector()
+    story_director = StoryDirector()
 
     # Экран предзагрузки
-    background = GIFImage("data/interface/background/gif2.gif", scale=2.2)
+    background = GifRuner("data/interface/background/gif2.gif", scale=2.2)
     pygame.font.init()
     font = pygame.font.SysFont('Trebuchet MS', 30)
     textsurface = font.render('Нажмите клавишу', False, (255, 255, 255))
@@ -39,6 +40,7 @@ def main():
     transparency = 255
     smoothness = False
     running = True
+    #
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,16 +65,73 @@ def main():
     black_background = pygame.Surface((int(config['graphics']['width']), int(config['graphics']['height'])))
     black_background.fill((33, 33, 33))
     k = 255
+    les2 = les = True
+    les3 = False
+    #
     while True:
         screen.fill(island.col())
         for event in pygame.event.get():
             if event.type == event_10in_second:
-                events = storyDirector.check(player.pos)
-                if events[1] == 'display':
-                    pass
+                story_director.check(player.snow_k, player.home_able)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    run = True
+                    while run:
+                        clock.tick(30)
+                        screen.fill((0, 0, 0))
+                        screen.blit(story_director.get_img(), (729, 129))
+                        for ev in pygame.event.get():
+                            if ev.type == pygame.KEYDOWN:
+                                if ev.key == pygame.K_q:
+                                    run = False
+                        pygame.display.flip()
 
-            player.handle_event(event)
+            match player.handle_event(event):
+                case 'les':
+                    if les:
+                        run = True
+                        les = False
+                        while run:
+                            clock.tick(30)
+                            screen.fill((0, 0, 0))
+                            screen.blit(story_director.get(1), (729, 129))
+                            for ev in pygame.event.get():
+                                if ev.type == pygame.KEYDOWN:
+                                    if ev.key == pygame.K_q:
+                                        run = False
+                            pygame.display.flip()
+                        story_director.check(9, player.home_able)
+                    elif player.snow_k and les2:
+                        les2 = False
+                        les3 = True
+                        run = True
+                        t1 = font.render('Миссия пройдена за почти', False, (255, 255, 255))
+                        t2 = bold_font.render('1 минуту', False, (255, 255, 255))
+                        while run:
+                            clock.tick(30)
+                            screen.fill((0, 0, 0))
+                            screen.blit(t1, (630, 360))
+                            screen.blit(t2, (1000, 355))
+                            for ev in pygame.event.get():
+                                if ev.type == pygame.KEYDOWN:
+                                    if ev.key == pygame.K_q:
+                                        run = False
+                            pygame.display.flip()
+                    elif les3:
+                        run = True
+                        while run:
+                            clock.tick(30)
+                            screen.fill((0, 0, 0))
+                            screen.blit(pygame.image.load('data/1over.jpg').convert(), (0, 0))
+                            for ev in pygame.event.get():
+                                if ev.type == pygame.KEYDOWN:
+                                    if ev.key == pygame.K_q:
+                                        run = False
+                                        exit(-666)
+                            pygame.display.flip()
+
         keys = pygame.key.get_pressed()
+
         player.pressed(keys)
 
         all_sprites.update(offset, (960 - camera[0], camera[1] - 540))
@@ -103,12 +162,12 @@ def main():
         for y, row in enumerate(island.ret()):
             for x, height in enumerate(row):
                 xp = (150 + x * 40 - y * 40 + x_pos)
-                if 0 < xp < 1920:
+                if -600 < xp < 1920:
                     for z, tile in enumerate(height):
                         if tile:
                             if z > player.pos_z and (sum([x, y]) >= sum([xx, yy])):
                                 yp = (100 + x * 20 + y * 20 - ((z + 1) * 56 + y_pos))
-                                if 0 < yp < 1080:
+                                if -600 < yp < 1080:
                                     screen.blit(get_texture(tile, player.snow_k), (xp, yp))
 
         """↓↓↓Cнежинки↓↓↓"""
@@ -126,7 +185,7 @@ def main():
         player.correct_move(offset, (960 - camera[0], camera[1] - 540))
         screen.set_alpha(transparency)
         if player.obuch_mg:
-            screen.blit(player.obuch_mg, (1920//2, 1080//2))
+            screen.blit(player.obuch_mg, (1920 // 2 + 50, 1080 // 2))
         if k:
             black_background.set_alpha(k)
             screen.blit(black_background, (0, 0))

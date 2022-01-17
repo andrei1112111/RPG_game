@@ -1,14 +1,9 @@
-"""GIFImage by Matthew Roe"""
-from skimage import io
-
 from PIL import Image
 import pygame
-from pygame.locals import *
-
 import time
 
 
-class GIFImage(object):
+class GifRuner(object):
     def __init__(self, filename, scale=1):
         self.filename = filename
         self.scale = scale
@@ -29,6 +24,7 @@ class GIFImage(object):
         image = self.image
 
         pal = image.getpalette()
+
         base_palette = []
         for i in range(0, len(pal), 3):
             rgb = pal[i:i + 3]
@@ -51,7 +47,7 @@ class GIFImage(object):
             while 1:
                 try:
                     duration = image.info["duration"]
-                except:
+                except KeyError:
                     duration = 100
 
                 duration *= .001  # convert to milliseconds!
@@ -83,16 +79,12 @@ class GIFImage(object):
                         palette = base_palette
                 else:
                     palette = base_palette
+                # ignoredErrors
                 pi = pygame.image.frombuffer(image.tobytes(), image.size, image.mode)
                 pi.set_palette(palette)
                 pi = pygame.transform.scale(pi, (self.image.size[0] * self.scale, self.image.size[1] * self.scale))
                 if "transparency" in image.info:
                     pi.set_colorkey(image.info["transparency"])
-                # pi2 = pygame.Surface((self.image.size[0] * self.scale, self.image.size[1] * self.scale), SRCALPHA)
-                # if cons:
-                #     for i in self.frames:
-                #         pi2.blit(i[0], (0, 0))
-                # pi2.blit(pi, (x0, y0), (x0, y0, x1 - x0, y1 - y0))
 
                 self.frames.append([pi, duration])
                 image.seek(image.tell() + 1)
@@ -116,39 +108,6 @@ class GIFImage(object):
         pict.set_alpha(transparency)
         screen.blit(pict, pos)
 
-    def seek(self, num):
-        self.cur = num
-        if self.cur < 0:
-            self.cur = 0
-        if self.cur >= len(self.frames):
-            self.cur = len(self.frames) - 1
-
-    def set_bounds(self, start, end):
-        if start < 0:
-            start = 0
-        if start >= len(self.frames):
-            start = len(self.frames) - 1
-        if end < 0:
-            end = 0
-        if end >= len(self.frames):
-            end = len(self.frames) - 1
-        if end < start:
-            end = start
-        self.startpoint = start
-        self.breakpoint = end
-
-    def pause(self):
-        self.running = False
-
-    def play(self):
-        self.running = True
-
-    def rewind(self):
-        self.seek(0)
-
-    def fastforward(self):
-        self.seek(self.length() - 1)
-
     def get_height(self):
         return (self.image.size[0] * self.scale, self.image.size[1] * self.scale)[1]
 
@@ -157,24 +116,3 @@ class GIFImage(object):
 
     def get_size(self):
         return (self.image.size[0] * self.scale, self.image.size[1] * self.scale)[0]
-
-    def length(self):
-        return len(self.frames)
-
-    def reverse(self):
-        self.reversed = not self.reversed
-
-    def reset(self):
-        self.cur = 0
-        self.ptime = time.time()
-        self.reversed = False
-
-    def copy(self):
-        new = GIFImage(self.filename)
-        new.running = self.running
-        new.breakpoint = self.breakpoint
-        new.startpoint = self.startpoint
-        new.cur = self.cur
-        new.ptime = self.ptime
-        new.reversed = self.reversed
-        return new

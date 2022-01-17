@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from itertools import chain, cycle
+from itertools import chain
 import pygame
 import random
 

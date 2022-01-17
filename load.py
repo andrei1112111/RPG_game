@@ -1,19 +1,17 @@
 import pygame
+from skimage import io
 
 
 def load_numbered(path, flip=False):
     r = []
-    for i in range(6):
-        s = pygame.image.load(f'{path}/{i}.png').convert()
+    for n in range(6):
+        s = pygame.image.load(f'{path}/{n}.png').convert()
         if flip:
             s = pygame.transform.flip(s, True, False)
         s.set_colorkey((0, 0, 0))
         s = pygame.transform.scale(s, (80, 96))
         r.append(s)
     return r
-
-
-from skimage import io
 
 
 def get_average_color(mapp):
@@ -152,26 +150,6 @@ amogus.set_colorkey((0, 0, 0))
 amogus = pygame.transform.scale(amogus, (amogus.get_rect().width * 4, amogus.get_rect().height * 4))
 amogus = [amogus, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
 
-snow = pygame.image.load('data/textures/snow_pieces/0.png').convert()
-snow.set_colorkey((0, 0, 0))
-snow = pygame.transform.scale(snow, (snow.get_rect().width * 4, snow.get_rect().height * 4))
-snow = [snow, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
-
-door1 = pygame.image.load('data/textures/blocks/door1.png').convert()
-door1.set_colorkey((0, 0, 0))
-door1 = pygame.transform.scale(door1, (door1.get_rect().width * 4, door1.get_rect().height * 4))
-door1 = [door1, get_average_color(io.imread('data/textures/blocks/door1.png')[:, :, :-1])]
-
-door2 = pygame.image.load('data/textures/blocks/door2.png').convert()
-door2.set_colorkey((0, 0, 0))
-door2 = pygame.transform.scale(door2, (door2.get_rect().width * 4, door2.get_rect().height * 4))
-door2 = [door2, get_average_color(io.imread('data/textures/blocks/door2.png')[:, :, :-1])]
-
-amogus = pygame.image.load('data/textures/blocks/amogus.png').convert()
-amogus.set_colorkey((0, 0, 0))
-amogus = pygame.transform.scale(amogus, (amogus.get_rect().width * 4, amogus.get_rect().height * 4))
-amogus = [amogus, get_average_color(io.imread('data/textures/blocks/amogus.png')[:, :, :-1])]
-
 snow = []
 for i in range(8):
     j = pygame.image.load(f'data/textures/snow_pieces/{i}.png').convert()
@@ -238,7 +216,7 @@ def get_texture(n, k=0):
         case 27:
             return amogus[0]
         case 28:
-            return snow[k][0]
+            return snow[k]
         case 99:
             return empty[0]
 

@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.run_back = load_numbered('data/textures/characters/diluc/runs_back')
         self.run_left = load_numbered('data/textures/characters/diluc/runs_side', True)
         self.run_stand = load_numbered('data/textures/characters/diluc/stands')
+        self.run_snow = load_numbered('data/textures/characters/diluc/digging', True)
         self.move = None
         self.home_able = False
         self.un_home_able = False
@@ -74,6 +75,8 @@ class Player(pygame.sprite.Sprite):
             if pygame.key.get_pressed()[pygame.K_e]:
                 if self.snow_k <= 7:
                     self.snow_k += 1
+        elif (x + 1 == 2 or x - 1 == 2 or x == 2) and (y + 1 == 3 or y - 1 == 3 or y == 3):
+            return 'les'
         else:
             self.obuch_mg = None
             self.home_able = self.un_home_able = False
@@ -127,12 +130,15 @@ class Player(pygame.sprite.Sprite):
             elif self.move == 'a':
                 fr = self.frame_animation.__next__()
                 self.image = self.run_left[fr]
+            elif self.move == 'snow':
+                fr = self.frame_animation.__next__()
+                self.image = self.run_snow[fr]
             else:
                 self.image = pygame.image.load('data/textures/characters/diluc/stands/0.png').convert()
                 self.image.set_colorkey((0, 0, 0))
                 self.image = pygame.transform.scale(self.image, (80, 96))
         if event.type == self.event_check:
-            self.check()
+            return self.check()
 
     def pressed(self, key):
         if key[pygame.K_ESCAPE]:
@@ -145,6 +151,8 @@ class Player(pygame.sprite.Sprite):
             self.move = 'a'
         elif key[pygame.K_d]:
             self.move = 'd'
+        elif key[pygame.K_e] and 1 <= self.snow_k <= 7:
+            self.move = 'snow'
         if key[pygame.K_f]:
             print(self.pos)
             print(self.get_cords(), '-----------------------')
